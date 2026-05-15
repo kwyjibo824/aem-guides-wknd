@@ -1,0 +1,7 @@
+{
+  "scripts": [
+    "create service user tp-workflow-service with path system/cq:services/wknd",
+    "set ACL for tp-workflow-service\n    allow jcr:read on /content\nend",
+    "set ACL for tp-workflow-service\n    allow jcr:read on /etc/replication\nend"
+  ]
+}

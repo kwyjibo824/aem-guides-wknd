@@ -1,0 +1,29 @@
+/*
+ * TP案件 コンテンツ公開ワークフロー
+ * Or Split 分岐スクリプト (#1)
+ *
+ * ワークフローメタデータの agentId を見て publish/preview を判定する。
+ * - true  を返した分岐に流れる
+ * - 各分岐に異なる branch 値（"publish" / "preview"）を設定して呼び出される
+ *
+ * 呼び出し例: workflowData.getMetaDataMap().get("branchExpected", "publish")
+ *           と agentId を突き合わせる方式ではなく、本スクリプトは
+ *           ステップ args の `branch` に対して agentId が一致するかを返す。
+ */
+function check() {
+    var metadata = workItem.getWorkflow().getMetaDataMap();
+    var agentId = metadata.get("agentId", "java.lang.String");
+
+    if (agentId === null || agentId === undefined) {
+        log.warn("TP OrSplit: agentId is not set on workflow metadata. Defaulting to 'publish' branch.");
+        agentId = "publish";
+    }
+
+    var expectedBranch = args && args.length > 0 ? String(args[0]) : "publish";
+    var matches = String(agentId).toLowerCase() === expectedBranch.toLowerCase();
+
+    log.info("TP OrSplit: agentId='{}' expectedBranch='{}' match={}", agentId, expectedBranch, matches);
+    return matches;
+}
+
+check();

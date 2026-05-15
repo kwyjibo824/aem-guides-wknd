@@ -60,6 +60,13 @@
                             <artifactId>aem-guides-wknd.ui.apps.structure</artifactId>
                         </repositoryStructurePackage>
                     </repositoryStructurePackages>
+                    <validatorsSettings>
+                        <jackrabbit-filter>
+                            <options>
+                                <validRoots>/,/apps,/apps/cq,/apps/cq/gui,/apps/cq/gui/content,/apps/cq/gui/content/common,/apps/cq/gui/content/common/managepublicationwizard,/libs,/content,/conf,/etc,/var,/tmp,/home</validRoots>
+                            </options>
+                        </jackrabbit-filter>
+                    </validatorsSettings>
                     <dependencies>
                     </dependencies>
                 </configuration>

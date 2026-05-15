@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          jcr:primaryType="cq:Dialog"
+          jcr:title="本番公開の承認"
+          helpPath=""
+          xtype="dialog">
+    <items
+        jcr:primaryType="cq:WidgetCollection">
+        <message
+            jcr:primaryType="cq:Widget"
+            text="Preview公開が完了しました。内容を確認のうえ、本番公開を承認または否認してください。"
+            xtype="static"/>
+        <comment
+            jcr:primaryType="cq:Widget"
+            fieldLabel="コメント"
+            name="./comment"
+            xtype="textarea"/>
+    </items>
+</jcr:root>

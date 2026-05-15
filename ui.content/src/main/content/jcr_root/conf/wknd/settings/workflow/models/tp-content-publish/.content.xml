@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          jcr:primaryType="cq:Page">
+    <jcr:content
+        jcr:primaryType="cq:PageContent"
+        jcr:title="TP コンテンツ公開ワークフロー"
+        jcr:description="TP案件のコンテンツ公開（Preview/本番）を扱う共通ワークフロー"
+        sling:resourceType="cq/workflow/components/pages/model"
+        cq:template="/libs/cq/workflow/templates/model">
+        <flow jcr:primaryType="nt:unstructured"/>
+        <model
+            jcr:primaryType="nt:unstructured"
+            title="TP コンテンツ公開ワークフロー"
+            description="TP案件のコンテンツ公開（Preview/本番）を扱う共通ワークフロー"
+            transient="false">
+            <metaData
+                jcr:primaryType="nt:unstructured"
+                multiResourceSupport="true"
+                transient="false"/>
+            <nodes jcr:primaryType="nt:unstructured">
+                <node0
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="Start"
+                    type="START">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </node0>
+                <node1
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="バージョン作成"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.day.cq.wcm.workflow.process.CreateVersionProcess"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node1>
+                <node2
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="公開先自動振り分け"
+                    description="agentIdで Publish/Preview に分岐 (#1)"
+                    type="OR_SPLIT">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </node2>
+                <node3
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="Preview公開 (Publish側初動)"
+                    description="本番公開前の Preview 確認用公開 (#6)"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.aem.guides.wknd.core.workflow.tp.PublishContentProcess"
+                        PROCESS_ARGS="agentId=preview"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node3>
+                <node4
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="Preview公開完了通知 (#2)"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.aem.guides.wknd.core.workflow.tp.EmailNotificationProcess"
+                        PROCESS_ARGS="notificationType=preview-complete"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node4>
+                <node5
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="起票者による本番公開確認"
+                    description="Dynamic Participant Step (#3): 起票者の Inbox に承認タスクを送る"
+                    type="PARTICIPANT">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PARTICIPANT="dynamic"
+                        DIALOG_PATH="/apps/wknd/workflow/dialogs/tp/approve-publish"
+                        CHOOSER="TP Initiator Chooser"/>
+                </node5>
+                <node6
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="予約日時まで待機 (本番公開)"
+                    description="本番公開予約日時まで待機。即時の場合はスキップ"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.granite.workflow.core.advance.AbsoluteTimeAutoAdvancer"
+                        PROCESS_ARGS="scheduledDateTimeMetaKey=scheduledPublishAt"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node6>
+                <node7
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="本番公開 (#6)"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.aem.guides.wknd.core.workflow.tp.PublishContentProcess"
+                        PROCESS_ARGS="agentId=publish"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node7>
+                <node8
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="本番公開完了通知 (#2)"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.aem.guides.wknd.core.workflow.tp.EmailNotificationProcess"
+                        PROCESS_ARGS="notificationType=publish-complete"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node8>
+                <node9
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="予約日時まで待機 (Preview公開)"
+                    description="Preview公開予約日時まで待機。即時の場合はスキップ"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.granite.workflow.core.advance.AbsoluteTimeAutoAdvancer"
+                        PROCESS_ARGS="scheduledDateTimeMetaKey=scheduledPreviewAt"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node9>
+                <node10
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="Preview公開 (#6)"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.aem.guides.wknd.core.workflow.tp.PublishContentProcess"
+                        PROCESS_ARGS="agentId=preview"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node10>
+                <node11
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="Preview公開完了通知 (#2)"
+                    type="PROCESS">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        PROCESS="com.adobe.aem.guides.wknd.core.workflow.tp.EmailNotificationProcess"
+                        PROCESS_ARGS="notificationType=preview-complete"
+                        PROCESS_AUTO_ADVANCE="true"/>
+                </node11>
+                <node-end
+                    jcr:primaryType="cq:WorkflowNode"
+                    title="End"
+                    type="END">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </node-end>
+            </nodes>
+            <transitions jcr:primaryType="nt:unstructured">
+                <transition0
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node0"
+                    to="node1">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition0>
+                <transition1
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node1"
+                    to="node2">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition1>
+                <transition2-publish
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node2"
+                    to="node3">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        SCRIPT_PATH="/apps/wknd/workflow/scripts/tp/branch-by-agent-id.ecma"
+                        SCRIPT_ARGS="publish"
+                        rule="ecma"/>
+                </transition2-publish>
+                <transition3
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node3"
+                    to="node4">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition3>
+                <transition4
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node4"
+                    to="node5">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition4>
+                <transition5-approved
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node5"
+                    to="node6">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        ROUTE="承認"/>
+                </transition5-approved>
+                <transition5-rejected
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node5"
+                    to="node-end">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        ROUTE="否認"/>
+                </transition5-rejected>
+                <transition6
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node6"
+                    to="node7">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition6>
+                <transition7
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node7"
+                    to="node8">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition7>
+                <transition8
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node8"
+                    to="node-end">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition8>
+                <transition2-preview
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node2"
+                    to="node9">
+                    <metaData
+                        jcr:primaryType="nt:unstructured"
+                        SCRIPT_PATH="/apps/wknd/workflow/scripts/tp/branch-by-agent-id.ecma"
+                        SCRIPT_ARGS="preview"
+                        rule="ecma"/>
+                </transition2-preview>
+                <transition9
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node9"
+                    to="node10">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition9>
+                <transition10
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node10"
+                    to="node11">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition10>
+                <transition11
+                    jcr:primaryType="cq:WorkflowTransition"
+                    from="node11"
+                    to="node-end">
+                    <metaData jcr:primaryType="nt:unstructured"/>
+                </transition11>
+            </transitions>
+        </model>
+    </jcr:content>
+</jcr:root>
