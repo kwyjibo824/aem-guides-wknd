@@ -1,0 +1,10 @@
+<!--/*
+  Button component overlay
+  Extends core/franklin/components/button/v1/button to support `classes` property for alignment.
+*/-->
+<p class="button-container ${properties.classes @ context='attribute'}">
+  <a href="${properties.link}"
+     class="button ${properties.linkType @ context='attribute'}"
+     data-sly-test="${properties.linkText}"
+     title="${properties.linkTitle}">${properties.linkText}</a>
+</p>
