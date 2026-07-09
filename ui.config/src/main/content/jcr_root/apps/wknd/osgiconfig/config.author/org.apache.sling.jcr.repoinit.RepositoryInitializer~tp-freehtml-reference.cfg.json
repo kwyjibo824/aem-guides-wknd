@@ -1,0 +1,6 @@
+{
+  "scripts": [
+    "create service user tp-freehtml-reference-service with path system/cq:services/wknd",
+    "set ACL for tp-freehtml-reference-service\n    allow jcr:read, jcr:modifyProperties on /content\nend"
+  ]
+}
