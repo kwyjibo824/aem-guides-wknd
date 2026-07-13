@@ -4,7 +4,6 @@
     <filter root="/apps/wknd/components"/>
     <filter root="/apps/wknd/i18n"/>
     <filter root="/apps/wknd/workflow"/>
-    <filter root="/apps/cq/gui/content/common/managepublicationwizard" mode="merge"/>
     <filter root="/apps/msm/wknd_blueprint" mode="merge"/>
     <filter root="/apps/core/franklin/components/button/v1/button" mode="merge"/>
     <filter root="/apps/core/wcm/components/page/v2/page/cq:dialog/content/items/tabs/items/basic/items/column/items/custom-css" mode="merge"/>
