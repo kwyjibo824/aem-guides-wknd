@@ -1,0 +1,48 @@
+# AC Tool (Netcentric Access Control Tool) 検証用設定
+#
+# TEPCO案件の「サイト階層ごとの担当組織をYAMLから出力する」検証のため、
+# WKND Sandboxの既存ロケール別コンテンツ（/content/wknd/us, /ca, /de）を
+# TEPCOのグループ会社サブパス（/pg, /ep, /rp 相当）の代わりに使い、
+# Permission Fragment パターンで動作確認する。
+#
+# 対応関係（検証用の読み替え）:
+#   /content/wknd/us -> TEPCOでいう /content/tepco/pg（パワーグリッド相当）
+#   /content/wknd/ca -> TEPCOでいう /content/tepco/ep（エナジーパートナー相当）
+#   /content/wknd/de -> TEPCOでいう /content/tepco/rp（リニューアブルパワー相当）
+
+- group_config:
+
+    - frag-us-author:
+        - name: "Fragment: WKND US - Author"
+          description: "TEPCO PG（パワーグリッド）相当のPermission Fragment"
+          path: wknd-permissions/fragments
+
+    - frag-ca-author:
+        - name: "Fragment: WKND CA - Author"
+          description: "TEPCO EP（エナジーパートナー）相当のPermission Fragment"
+          path: wknd-permissions/fragments
+
+    - frag-de-author:
+        - name: "Fragment: WKND DE - Author"
+          description: "TEPCO RP（リニューアブルパワー）相当のPermission Fragment"
+          path: wknd-permissions/fragments
+
+- ace_config:
+
+    - frag-us-author:
+        - path: /content/wknd/us
+          permission: allow
+          actions: read,modify,create,delete,acl_read,replicate
+
+    - frag-ca-author:
+        - path: /content/wknd/ca
+          permission: allow
+          actions: read,modify,create,delete,acl_read,replicate
+
+    - frag-de-author:
+        - path: /content/wknd/de
+          permission: allow
+          actions: read,modify,create,delete,acl_read,replicate
+
+- global_config:
+    minRequiredVersion: 4.0.0
