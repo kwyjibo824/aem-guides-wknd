@@ -1,0 +1,6 @@
+{
+  "scripts": [
+    "create service user tp-incoming-links-service with path system/cq:services/wknd",
+    "set ACL for tp-incoming-links-service\n    allow jcr:read on /content\n    allow jcr:read on /libs\n    allow jcr:read on /apps\n    allow jcr:read on /mnt\n    allow jcr:read on /conf\nend"
+  ]
+}

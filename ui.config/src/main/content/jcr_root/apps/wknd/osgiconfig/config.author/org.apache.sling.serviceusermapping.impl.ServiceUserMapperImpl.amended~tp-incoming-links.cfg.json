@@ -1,0 +1,5 @@
+{
+  "user.mapping": [
+    "aem-guides-wknd.core:tp-incoming-links=[tp-incoming-links-service]"
+  ]
+}
